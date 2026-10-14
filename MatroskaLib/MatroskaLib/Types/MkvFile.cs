@@ -23,6 +23,9 @@ public record MkvFile
         if (other is null)
             throw new ArgumentNullException(nameof(other));
 
+        if (tracks.Count != other.tracks.Count)
+            return $"Track count does not match. Expected {tracks.Count}, got {other.tracks.Count}.";
+
         for (int i = 0; i < tracks.Count; i++)
         {
             var track = tracks[i];

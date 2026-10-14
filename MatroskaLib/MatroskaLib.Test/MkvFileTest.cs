@@ -51,4 +51,30 @@ public class MkvFileTest
                          }
                          """);
     }
+
+    [Fact]
+    public void CompareToGetErrorShouldBeSymmetricWhenTrackCountDiffers()
+    {
+        var small = CreateFile(new Track(null!) { number = 1, type = TrackTypeEnum.video, language = "und" },
+                               new Track(null!) { number = 2, type = TrackTypeEnum.audio, language = "eng" });
+        var big = CreateFile(new Track(null!) { number = 1, type = TrackTypeEnum.video, language = "und" },
+                             new Track(null!) { number = 2, type = TrackTypeEnum.audio, language = "eng" },
+                             new Track(null!) { number = 3, type = TrackTypeEnum.subtitle, language = "fre" });
+
+        small.CompareToGetError(big).Should().NotBeNull();
+        big.CompareToGetError(small).Should().NotBeNull();
+    }
+
+    private static MkvFile CreateFile(params Track[] tracks) => new()
+    {
+        filePath = "file.mkv",
+        tracks = [..tracks],
+        endPosition = 0,
+        beginHeaderPosition = 0,
+        seekHeadCheckSum = null,
+        seekList = [],
+        tracksCheckSum = null,
+        tracksPosition = 0,
+        voidPosition = 0
+    };
 }
